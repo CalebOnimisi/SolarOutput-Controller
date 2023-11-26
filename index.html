@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+  <!-- For every html, there is head and body -->
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale= 1.0">
+    <title>SOLAR OUTPUT CONTROLLER</title>
+    <!-- JQuerry for http calls -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- #Import css -->
+    <link rel="stylesheet" href="app.css" />
+    <script>
+      function updateValue(appliance) {
+        console.log(`${appliance} button was clicked!`);
+    
+        // Determine the appliance ID based on the button clicked
+        let applianceId;
+        if (appliance === 'office') {
+          applianceId = 'office0';
+        } else if (appliance === 'lab') {
+          applianceId = 'lab0';
+        }
+    
+        // Make a POST request to the server's endpoint with the appliance ID
+        fetch(`http://127.0.0.1:5000/receive_state`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ [applianceId]: 1 }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Data sent successfully:', data);
+          })
+          .catch(error => {
+            console.error('Error sending data to server:', error);
+          });
+      }
+    </script>
+    
+  </head>
+  <body>
+    <div class="img"></div>
+    <div class="content">
+        
+      <div class="header">
+        <div><img src="./images/fut-logo.png" alt="school logo" class="logo" /></div>
+        <div><h1>FEDERAL UNIVERSITY OF TECHNOLOGY, MINNA.</h1></div>
+      </div>
+
+      <div class="sub-header"><h2>SOLAR OUTPUT CONTROLLER</h2></div>
+
+    
+      <div id="appliance-container">
+        <h3 class="toggle-header">Toggle Appliances</h3>
+        <div class="appliance">
+          <h2>Office</h2>
+          <p class="status">Off</p>
+          <button class="toggle" onclick="updateValue('office')">Toggle</button>
+        </div>
+        <div class="appliance">
+          <h2>Laboratory</h2>
+          <p class="status">Off</p>
+          <button class="toggle" onclick="updateValue('lab')">Toggle</button>
+        </div>
+        
+      </div>
+      <div id="message">
+        <p id="status-message">Please switch off the appliances</p>
+      </div>
+
+      <div class="readings">
+        <div class="temperature-reading"> <span> Temperature: </span></div>
+        <div class="humidity-reading"><span>Humidity: </span></div>
+        <div class="light-intensity"><span>Light intensity: </span></div>
+        <div class="energy-reading"><span>Energy reading: </span></div>
+      </div>
+      <div class="tab" id="advice-tab">
+        Advice
+        <div id="advice-container">
+          <h2>Please turn off Appliance 1</h2>
+        </div>
+      </div>
+    </div>
+    
+
+    <script src="./app.js"></script>
+  </body>
+</html>
